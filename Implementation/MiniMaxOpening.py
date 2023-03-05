@@ -20,8 +20,7 @@ class MiniMaxOpening() :
     
     # Method of generating moves created (Positions), after removing a black piece from the board.
     def GenerateRemove(self, brd,  brdPosList) :
-        moves = brdPosList.copy()
-        i = 0
+        moves, i = brdPosList.copy(), 0
         while (i < len(brd)) :
             if (brd[i] == 'B') :
                 if (not(self.CloseMill(i, brd))) :
@@ -58,7 +57,7 @@ class MiniMaxOpening() :
             result.append(move)
         return result
     
-    # If move to j closes a mill return true
+    # If move to loc closes a mill return true
     def CloseMill(self, loc, board) :
         c = board[loc]
         if (c == 'W' or c == 'B') :
