@@ -112,38 +112,30 @@ class MiniMaxOpening() :
         if (depth > 0) :
             print("MaxMin Current Depth: " + str(depth) + " ##################################################################")
             depth -= 1
-            wMoves, mnBrd, mxBrd =  [], [], []
-            v = float('-inf')
-            # Generates moves created by adding a white piece at x.
-            wMoves = self.GenerateAdd(brdPos)
-            for wMove in wMoves :
-                print("Possible moves for white: " +  ''.join(wMove))
-            i = 0
+            # GenerateAdd Generates moves created by adding a white piece at x.
+            i, v, wMoves, mnBrd, mxBrd = 0, float('-inf'), self.GenerateAdd(brdPos), [], []
+            for wMove in wMoves : print("Possible Moves For White: " +  ''.join(wMove))
             # For each child y (wMove) of x (wMoves)
             while (i < len(wMoves)) :
                 # Tree for min
                 mnBrd = self.MinMax(wMoves[i], depth)
                 if (v < self.StaticEstimation(mnBrd)) :
                     v = self.StaticEstimation(mnBrd)
-                    MiniMaxOpening.minimaxEstimate = v
+                    self.minimaxEstimate = v
                     mxBrd = wMoves[i]
                 i += 1
             return mxBrd
         elif(depth == 0) :
-            MiniMaxOpening.positionsEvaluated += 1
+            self.positionsEvaluated += 1
         return brdPos
     
     def MinMax(self, brdPos,  depth) :
         if (depth > 0) :
             print("MinMax Current Depth: " + str(depth) + " ##################################################################")
             depth -= 1
-            bMoves, mxBrd, mnBrd =  [], [], []
-            v = float('inf')
-            # Generates moves created by adding a black piece at x.
-            bMoves = self.GenerateBlackMoves(brdPos)
-            for bMove in bMoves :
-                print("the possible moves for black are: " +  ''.join(bMove))
-            i = 0
+            # GenerateBlackMoves Generates moves created by adding a black piece at x.
+            i, v, bMoves, mxBrd, mnBrd =  0, float('inf'), self.GenerateBlackMoves(brdPos), [], []
+            for bMove in bMoves : print("Possible Moves For Black: " +  ''.join(bMove))
             while (i < len(bMoves)) :
                 # Tree for max
                 mxBrd = self.MaxMin(bMoves[i], depth)
@@ -153,7 +145,7 @@ class MiniMaxOpening() :
                 i += 1
             return mnBrd
         elif(depth == 0) :
-            MiniMaxOpening.positionsEvaluated += 1
+            self.positionsEvaluated += 1
         return brdPos
     
 
