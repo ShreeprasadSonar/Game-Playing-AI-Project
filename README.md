@@ -1,2 +1,2 @@
 # Game-Playing-AI-Project
-Project for CS 6375
+Project for CS-6375
