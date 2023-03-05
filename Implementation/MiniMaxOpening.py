@@ -5,36 +5,36 @@ class MiniMaxOpening() :
     
     # Generates moves created by adding a white piece (to be used in the opening).
     def GenerateAdd(self, brdPos) :
-        brdPosList, brdCopy, i =  [], None, 0
+        brdPosList, i =  [], 0
         while (i < len(brdPos)) :
             if (brdPos[i] == 'x') :
-                brdCopy = brdPos.copy()
-                brdCopy[i] = 'W'
-                if (self.CloseMill(i, brdCopy)) :
+                board = brdPos.copy()
+                board[i] = 'W'
+                if (self.CloseMill(i, board)) :
                     # GenerateRemove fuction adds the moves to the list and returns it
-                    brdPosList = self.GenerateRemove(brdCopy, brdPosList)
+                    brdPosList = self.GenerateRemove(board, brdPosList)
                 else :
-                    brdPosList.append(brdCopy)
+                    brdPosList.append(board)
             i += 1
         return brdPosList
     
     # Method of generating moves created (Positions), after removing a black piece from the board.
     def GenerateRemove(self, brd,  brdPosList) :
-        list = brdPosList.copy()
+        moves = brdPosList.copy()
         i = 0
         while (i < len(brd)) :
             if (brd[i] == 'B') :
-                if (not (self.CloseMill(i, brd))) :
+                if (not(self.CloseMill(i, brd))) :
                     # print("In Black does not have a mill : ", brd)
-                    brdCopy = brd.copy()
-                    brdCopy[i] = 'x'
-                    list.append(brdCopy)
+                    board = brd.copy()
+                    board[i] = 'x'
+                    moves.append(board)
                 else :
                     # print("In Black has a mill")
-                    brdCopy = brd.copy()
-                    list.append(brdCopy)
+                    board = brd.copy()
+                    moves.append(board)
             i += 1
-        return list # positions are added to L by removing black pieces
+        return moves # positions are added to L by removing black pieces
     
     # This score is used by the minimax algorithm to determine the best possible move for a player to make.
     def StaticEstimation(self, brd) :    
@@ -49,113 +49,68 @@ class MiniMaxOpening() :
         return list(swapped_brd)
 
     def GenerateBlackMoves(self, brdPos) :
-        brdCopy = brdPos.copy()
-        blackMoves, result =  [], []
+        board, blackMoves, result = brdPos.copy(), [], []
         # Swap W and B so that moves can be evaluated for B from prespective of W
-        brdCopy = self.Swap(brdCopy)
-        blackMoves = self.GenerateAdd(brdCopy)
+        board = self.Swap(board)
+        blackMoves = self.GenerateAdd(board)
         for move in blackMoves :
             move = self.Swap(move)
             result.append(move)
         return result
     
-        # If move to j closes a mill return true
-    def CloseMill(self, loc,  brdCopy) :
-        c = brdCopy[loc]
+    # If move to j closes a mill return true
+    def CloseMill(self, loc, board) :
+        c = board[loc]
         if (c == 'W' or c == 'B') :
             if loc==0 :
-                if ((brdCopy[3] == c and brdCopy[6] == c) or (brdCopy[1] == c and brdCopy[2] == c)) :
-                    return True
-                else : return False               
+                return True if ((board[3] == c and board[6] == c) or (board[1] == c and board[2] == c)) else False              
             elif loc==1 :
-                if (brdCopy[0] == c and brdCopy[2] == c) :
-                    return True
-                else : return False
+                return True if (board[0] == c and board[2] == c) else False
             elif loc==2 :
-                if ((brdCopy[0] == c and brdCopy[1] == c) or (brdCopy[5] == c and brdCopy[7] == c) or (brdCopy[12] == c and brdCopy[21] == c)) :
-                    return True
-                else : return False
+                return True if ((board[0] == c and board[1] == c) or (board[5] == c and board[7] == c) or (board[12] == c and board[21] == c)) else False
             elif loc==3 :
-                if ((brdCopy[8] == c and brdCopy[16] == c) or (brdCopy[0] == c and brdCopy[6] == c) or (brdCopy[4] == c and brdCopy[5] == c)) :
-                    return True
-                else : return False
+                return True if ((board[8] == c and board[16] == c) or (board[0] == c and board[6] == c) or (board[4] == c and board[5] == c)) else False
             elif loc==4 :
-                if (brdCopy[3] == c and brdCopy[5] == c) :
-                    return True
-                else : return False
+                return True if (board[3] == c and board[5] == c) else False
             elif loc==5 :
-                if ((brdCopy[3] == c and brdCopy[4] == c) or (brdCopy[2] == c and brdCopy[7] == c) or (brdCopy[11] == c and brdCopy[18] == c)) :
-                    return True
-                else : return False
+                return True if ((board[3] == c and board[4] == c) or (board[2] == c and board[7] == c) or (board[11] == c and board[18] == c)) else False
             elif loc==6 :
-                if ((brdCopy[0] == c and brdCopy[3] == c) or (brdCopy[9] == c and brdCopy[13] == c)) :
-                    return True
-                else : return False
+                return True if ((board[0] == c and board[3] == c) or (board[9] == c and board[13] == c)) else False
             elif loc==7 :
-                if ((brdCopy[10] == c and brdCopy[15] == c) or (brdCopy[2] == c and brdCopy[5] == c)) :
-                    return True
-                else : return False
+                return True if ((board[10] == c and board[15] == c) or (board[2] == c and board[5] == c)) else False
             elif loc==8 :
-                if (brdCopy[3] == c and brdCopy[16] == c) :
-                    return True
-                else : return False
+                return True if (board[3] == c and board[16] == c) else False
             elif loc==9 :
-                if (brdCopy[6] == c and brdCopy[13] == c) :
-                    return True
-                else : return False
+                return True if (board[6] == c and board[13] == c) else False
             elif loc==10 :
-                if ((brdCopy[7] == c and brdCopy[15] == c) or (brdCopy[11] == c and brdCopy[12] == c)) :
-                    return True
-                else : return False
+                return True if ((board[7] == c and board[15] == c) or (board[11] == c and board[12] == c)) else False
             elif loc==11 :
-                if ((brdCopy[10] == c and brdCopy[12] == c) or (brdCopy[5] == c and brdCopy[18] == c)) :
-                    return True
-                else : return False
+                return True if ((board[10] == c and board[12] == c) or (board[5] == c and board[18] == c)) else False
             elif loc==12 :
-                if ((brdCopy[10] == c and brdCopy[11] == c) or (brdCopy[2] == c and brdCopy[21] == c)) :
-                    return True
-                else : return False
+                return True if ((board[10] == c and board[11] == c) or (board[2] == c and board[21] == c)) else False
             elif loc==13 :
-                if ((brdCopy[16] == c and brdCopy[19] == c) or (brdCopy[14] == c and brdCopy[15] == c) or (brdCopy[9] == c and brdCopy[6] == c)) :
-                    return True
-                else : return False
+                return True if ((board[16] == c and board[19] == c) or (board[14] == c and board[15] == c) or (board[9] == c and board[6] == c)) else False
             elif loc==14 :
-                if ((brdCopy[13] == c and brdCopy[15] == c) or (brdCopy[17] == c and brdCopy[20] == c)) :
-                    return True
-                else : return False
+                return True if ((board[13] == c and board[15] == c) or (board[17] == c and board[20] == c)) else False
             elif loc==15 :
-                if ((brdCopy[13] == c and brdCopy[14] == c) or (brdCopy[18] == c and brdCopy[21] == c) or (brdCopy[7] == c and brdCopy[10] == c)) :
-                    return True
-                else : return False
+                return True if ((board[13] == c and board[14] == c) or (board[18] == c and board[21] == c) or (board[7] == c and board[10] == c)) else False
             elif loc==16 :
-                if ((brdCopy[13] == c and brdCopy[19] == c) or (brdCopy[17] == c and brdCopy[18] == c) or (brdCopy[3] == c and brdCopy[8] == c)) :
-                    return True
-                else : return False
+                return True if ((board[13] == c and board[19] == c) or (board[17] == c and board[18] == c) or (board[3] == c and board[8] == c)) else False
             elif loc==17 :
-                if ((brdCopy[16] == c and brdCopy[18] == c) or (brdCopy[14] == c and brdCopy[20] == c)) :
-                    return True
-                else : return False
+                return True if ((board[16] == c and board[18] == c) or (board[14] == c and board[20] == c)) else False
             elif loc==18 :
-                if ((brdCopy[16] == c and brdCopy[17] == c) or (brdCopy[15] == c and brdCopy[21] == c) or (brdCopy[5] == c and brdCopy[11] == c)) :
-                    return True
-                else : return False
+                return True if ((board[16] == c and board[17] == c) or (board[15] == c and board[21] == c) or (board[5] == c and board[11] == c)) else False
             elif loc==19 :
-                if ((brdCopy[20] == c and brdCopy[21] == c) or (brdCopy[13] == c and brdCopy[16] == c)) :
-                    return True
-                else : return False
+                return True if ((board[20] == c and board[21] == c) or (board[13] == c and board[16] == c)) else False
             elif loc==20 :
-                if ((brdCopy[19] == c and brdCopy[21] == c) or (brdCopy[14] == c and brdCopy[17] == c)) :
-                    return True
-                else : return False
+                return True if ((board[19] == c and board[21] == c) or (board[14] == c and board[17] == c)) else False
             elif loc==21 :
-                if ((brdCopy[19] == c and brdCopy[20] == c) or (brdCopy[15] == c and brdCopy[18] == c) or (brdCopy[2] == c and brdCopy[12] == c)) :
-                    return True
-                else : return False
+                return True if ((board[19] == c and board[20] == c) or (board[15] == c and board[18] == c) or (board[2] == c and board[12] == c)) else False
         return False
     
-    def MaxMin(self, brdPos,  depth) :
+    def MaxMin(self, brdPos, depth) :
         if (depth > 0) :
-            print("Current Depth at MaxMin: " + str(depth) + " ##################################################################")
+            print("MaxMin Current Depth: " + str(depth) + " ##################################################################")
             depth -= 1
             wMoves, mnBrd, mxBrd =  [], [], []
             v = float('-inf')
@@ -180,7 +135,7 @@ class MiniMaxOpening() :
     
     def MinMax(self, brdPos,  depth) :
         if (depth > 0) :
-            print("current depth at MinMax is: " + str(depth) + " ##################################################################")
+            print("MinMax Current Depth: " + str(depth) + " ##################################################################")
             depth -= 1
             bMoves, mxBrd, mnBrd =  [], [], []
             v = float('inf')
