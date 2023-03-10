@@ -19,20 +19,21 @@ class MiniMaxOpening() :
         return brdPosList
     
     # Method of generating moves created (Positions), after removing a black piece from the board.
-    def GenerateRemove(self, brd,  brdPosList) :
+    def GenerateRemove(self, brd,  brdPosList):
         moves, i = brdPosList.copy(), 0
         while (i < len(brd)) :
+            positionAppended = False
             if (brd[i] == 'B') :
                 if (not(self.CloseMill(i, brd))) :
                     # print("In Black does not have a mill : ", brd)
                     board = brd.copy()
                     board[i] = 'x'
-                    moves.append(board)
-                else :
-                    # print("In Black has a mill")
-                    board = brd.copy()
+                    positionAppended = True
                     moves.append(board)
             i += 1
+        if positionAppended == False:
+            board = brd.copy()
+            moves.append(board)
         return moves # positions are added to L by removing black pieces
     
     # This score is used by the minimax algorithm to determine the best possible move for a player to make.
@@ -109,11 +110,11 @@ class MiniMaxOpening() :
     
     def MaxMin(self, brdPos, depth) :
         if (depth > 0) :
-            print("MaxMin Current Depth: " + str(depth) + " ##################################################################")
+            # print("MaxMin Current Depth: " + str(depth) + " ##################################################################")
             depth -= 1
             # GenerateAdd Generates moves created by adding a white piece at x.
             i, v, wMoves, mnBrd, mxBrd = 0, float('-inf'), self.GenerateAdd(brdPos), [], []
-            for wMove in wMoves : print("Possible Moves For White: " +  ''.join(wMove))
+            # for wMove in wMoves : print("Possible Moves For White: " +  ''.join(wMove))
             # For each child y (wMove) of x (wMoves)
             while (i < len(wMoves)) :
                 # Tree for min
@@ -130,11 +131,11 @@ class MiniMaxOpening() :
     
     def MinMax(self, brdPos,  depth) :
         if (depth > 0) :
-            print("MinMax Current Depth: " + str(depth) + " ##################################################################")
+            # print("MinMax Current Depth: " + str(depth) + " ##################################################################")
             depth -= 1
             # GenerateBlackMoves Generates moves created by adding a black piece at x.
             i, v, bMoves, mxBrd, mnBrd =  0, float('inf'), self.GenerateBlackMoves(brdPos), [], []
-            for bMove in bMoves : print("Possible Moves For Black: " +  ''.join(bMove))
+            # for bMove in bMoves : print("Possible Moves For Black: " +  ''.join(bMove))
             while (i < len(bMoves)) :
                 # Tree for max
                 mxBrd = self.MaxMin(bMoves[i], depth)
@@ -156,7 +157,7 @@ if __name__=="__main__":
         depth = int(sys.argv[3])
         if len(brd1) != 22:
             print("Invalid board1.txt length : ", len(brd1))
-        print("Given Board : " + brd1 + "\nGiven Depth : " + str(depth))
+        # print("Given Board : " + brd1 + "\nGiven Depth : " + str(depth))
         
         mmo = MiniMaxOpening()       
         movePlayedList = mmo.MaxMin(brd1List, depth) # Invoke MaxMin
