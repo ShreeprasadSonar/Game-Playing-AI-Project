@@ -117,6 +117,7 @@ class MiniMaxOpening() :
         # GenerateAdd Generates moves created by adding a white piece at x.
         i, v, wMoves, mnBrd, mxBrd = 0, float('-inf'), self.GenerateAdd(brdPos), [], []
         # for wMove in wMoves : print("Possible Moves For White: " +  ''.join(wMove))
+        print("Possible Moves For White: " +  str(len(wMoves)))
         # For each child y (wMove) of x (wMoves)
         while (i < len(wMoves)) :
                 # Tree for min
@@ -137,6 +138,7 @@ class MiniMaxOpening() :
         # GenerateBlackMoves Generates moves created by adding a black piece at x.
         i, v, bMoves, mxBrd, mnBrd =  0, float('inf'), self.GenerateBlackMoves(brdPos), [], []
         # for bMove in bMoves : print("Possible Moves For Black: " +  ''.join(bMove))
+        print("Possible Moves For Black: " +  str(len(bMoves)))
         while (i < len(bMoves)) :
             # Tree for max
             mxBrd = self.MaxMin(bMoves[i], depth)
