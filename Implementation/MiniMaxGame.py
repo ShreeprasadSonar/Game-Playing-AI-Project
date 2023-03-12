@@ -115,7 +115,7 @@ class MiniMaxGame(object) :
         elif j==19 : return [0, 16, 20]
         elif j==20 : return [17, 19, 21]
         elif j==21 : return [12, 18, 20] 
-        else : print("Invalid Neignbour location")
+        else : print("Invalid Neighbour location")
 
     # If move to loc closes a mill return true
     def CloseMill(self, loc, board) :
