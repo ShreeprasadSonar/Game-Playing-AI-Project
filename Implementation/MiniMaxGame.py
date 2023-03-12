@@ -1,4 +1,3 @@
-# Java to Python by kalkicode.com
 import sys
 class MiniMaxGame(object) :
     positionsEvaluated = 0
