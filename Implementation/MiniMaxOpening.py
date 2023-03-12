@@ -107,47 +107,44 @@ class MiniMaxOpening() :
             elif loc==21 :
                 return True if ((board[19] == c and board[20] == c) or (board[15] == c and board[18] == c) or (board[2] == c and board[12] == c)) else False
         return False
-    
-    def MaxMin(self, brdPos, depth) :
-        if (depth > 0) :
-            # print("MaxMin Current Depth: " + str(depth) + " ##################################################################")
-            depth -= 1
-            # GenerateAdd Generates moves created by adding a white piece at x.
-            i, v, wMoves, mnBrd, mxBrd = 0, float('-inf'), self.GenerateAdd(brdPos), [], []
-            # for wMove in wMoves : print("Possible Moves For White: " +  ''.join(wMove))
-            # For each child y (wMove) of x (wMoves)
-            while (i < len(wMoves)) :
+
+    def MaxMin(self, brdPos, depth):
+        if depth == 0:
+            self.positionsEvaluated += 1
+            return brdPos
+        # print("MaxMin Current Depth: " + str(depth) + " ##################################################################")
+        depth -= 1
+        # GenerateAdd Generates moves created by adding a white piece at x.
+        i, v, wMoves, mnBrd, mxBrd = 0, float('-inf'), self.GenerateAdd(brdPos), [], []
+        # for wMove in wMoves : print("Possible Moves For White: " +  ''.join(wMove))
+        # For each child y (wMove) of x (wMoves)
+        while (i < len(wMoves)) :
                 # Tree for min
-                mnBrd = self.MinMax(wMoves[i], depth)
-                if (v < self.StaticEstimation(mnBrd)) :
-                    v = self.StaticEstimation(mnBrd)
-                    self.minimaxEstimate = v
-                    mxBrd = wMoves[i]
-                i += 1
-            return mxBrd
-        elif(depth == 0) :
+            mnBrd = self.MinMax(wMoves[i], depth)
+            if (v < self.StaticEstimation(mnBrd)) :
+                v = self.StaticEstimation(mnBrd)
+                self.minimaxEstimate = v
+                mxBrd = wMoves[i]
+            i += 1
+        return mxBrd
+
+    def MinMax(self, brdPos, depth) :
+        if depth == 0:
             self.positionsEvaluated += 1
-        return brdPos
-    
-    def MinMax(self, brdPos,  depth) :
-        if (depth > 0) :
-            # print("MinMax Current Depth: " + str(depth) + " ##################################################################")
-            depth -= 1
-            # GenerateBlackMoves Generates moves created by adding a black piece at x.
-            i, v, bMoves, mxBrd, mnBrd =  0, float('inf'), self.GenerateBlackMoves(brdPos), [], []
-            # for bMove in bMoves : print("Possible Moves For Black: " +  ''.join(bMove))
-            while (i < len(bMoves)) :
-                # Tree for max
-                mxBrd = self.MaxMin(bMoves[i], depth)
-                if (v > self.StaticEstimation(mxBrd)) :
-                    v = self.StaticEstimation(mxBrd)
-                    mnBrd = bMoves[i]
-                i += 1
-            return mnBrd
-        elif(depth == 0) :
-            self.positionsEvaluated += 1
-        return brdPos
-    
+            return brdPos
+        # print("MinMax Current Depth: " + str(depth) + " ##################################################################")
+        depth -= 1
+        # GenerateBlackMoves Generates moves created by adding a black piece at x.
+        i, v, bMoves, mxBrd, mnBrd =  0, float('inf'), self.GenerateBlackMoves(brdPos), [], []
+        # for bMove in bMoves : print("Possible Moves For Black: " +  ''.join(bMove))
+        while (i < len(bMoves)) :
+            # Tree for max
+            mxBrd = self.MaxMin(bMoves[i], depth)
+            if (v > self.StaticEstimation(mxBrd)) :
+                v = self.StaticEstimation(mxBrd)
+                mnBrd = bMoves[i]
+            i += 1
+        return mnBrd 
 
 if __name__=="__main__":
     try: 
