@@ -215,14 +215,14 @@ class MiniMaxGame(object) :
 
 
 if __name__=="__main__":
-    # try: 
+    try: 
         with open(sys.argv[1], 'r') as f:
             brd1 = f.read()
             brd1List = list(brd1)
         depth = int(sys.argv[3])
         if len(brd1) != 22:
             print("Invalid board1.txt length : ", len(brd1))
-        # print("Given Board : " + brd1 + "\nGiven Depth : " + str(depth))
+        print("Given Board : " + brd1 + "\nGiven Depth : " + str(depth))
         
         mmg = MiniMaxGame()       
         movePlayedList = mmg.MaxMin(brd1List, depth) # Invoke MaxMin
@@ -233,5 +233,5 @@ if __name__=="__main__":
         with open(sys.argv[2], 'w') as f:
             f.write(movePlayed)
 
-    # except:
-    #     print("Please specify in format: Python MiniMaxGame.py board1.txt board2.txt 2")
+    except:
+        print("Please specify in format: Python MiniMaxGame.py board1.txt board2.txt 2")
