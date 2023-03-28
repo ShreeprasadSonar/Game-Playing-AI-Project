@@ -226,6 +226,8 @@ if __name__=="__main__":
         alpha, beta = float('-inf'), float('inf')     
         movePlayedList = abg.MaxMin(brd1List, depth, alpha, beta) # Invoke MaxMin
         movePlayed = ''.join(movePlayedList)
+        print("\n## ABGame.py ##\n")
+        print("Given Board : " + brd1 + "\nGiven Depth : " + str(depth)+ "\n")
         print("Board Position: ", movePlayed)
         print("Positions evaluated by static estimation: ", abg.positionsEvaluated)
         print("MINIMAX estimate: ", abg.minimaxEstimate)
@@ -233,4 +235,4 @@ if __name__=="__main__":
             f.write(movePlayed)
 
     # except:
-        print("Please specify in format: Python MiniMaxGame.py board1.txt board2.txt 2")
+        print("Please specify in format: Python ABGame.py board1.txt board2.txt 2")

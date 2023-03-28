@@ -157,11 +157,13 @@ if __name__=="__main__":
         depth = int(sys.argv[3])
         if len(brd1) != 22:
             print("Invalid board1.txt length : ", len(brd1))
-        print("Given Board : " + brd1 + "\nGiven Depth : " + str(depth))
+        
         
         mmo = MiniMaxOpening()       
         movePlayedList = mmo.MaxMin(brd1List, depth) # Invoke MaxMin
         movePlayed = ''.join(movePlayedList)
+        print("\n## MiniMaxOpening.py ##\n")
+        print("Given Board : " + brd1 + "\nGiven Depth : " + str(depth) + "\n")
         print("Board Position: ", movePlayed)
         print("Positions evaluated by static estimation: ", mmo.positionsEvaluated)
         print("MINIMAX estimate: ", mmo.minimaxEstimate)

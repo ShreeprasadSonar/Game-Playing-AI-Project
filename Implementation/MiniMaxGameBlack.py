@@ -215,15 +215,16 @@ if __name__=="__main__":
         depth = int(sys.argv[3])
         if len(brd1) != 22:
             print("Invalid board1.txt length : ", len(brd1))
-        # print("Given Board : " + brd1 + "\nGiven Depth : " + str(depth))
         
         mmgb = MiniMaxGameBlack()    
         # Invoke MaxMin and play a game by first swaping board for prespective of black and swap back again   
         movePlayedList = mmgb.Swap(mmgb.MaxMin(mmgb.Swap(brd1List), depth)) # Invoke MaxMin
         movePlayed = ''.join(movePlayedList)
+        print("\n## MiniMaxGameBlack.py ##\n")
+        print("Given Board : " + brd1 + "\nGiven Depth : " + str(depth)+ "\n")
         print("Board Position: ", movePlayed)
         print("Positions evaluated by static estimation: ", mmgb.positionsEvaluated)
-        print("MINIMAX estimate: ", mmgb.minimaxEstimate)
+        print("MINIMAX estimate: ", mmgb.minimaxEstimate * (-1))
         with open(sys.argv[2], 'w') as f:
             f.write(movePlayed)
 
