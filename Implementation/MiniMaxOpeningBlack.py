@@ -149,6 +149,22 @@ class MiniMaxOpeningBlack() :
             i += 1
         return mnBrd 
 
+    def printBoard(self, board):
+        print("{}-----------{}-----------{}".format(board[19], board[20], board[21]))
+        print("| \         |         / |")
+        print("|   {}-------{}-------{}   |".format(board[16], board[17], board[18]))
+        print("|   | \     |     / |   |")
+        print("|   |   {}---{}---{}   |   |".format(board[13], board[14], board[15]))
+        print("|   |   |       |   |   |")
+        print("|   {}---{}       {}---{}---{}".format(board[8], board[9], board[10], board[11], board[12]))
+        print("|   |   |       |   |   |")
+        print("|   |   {}-------{}   |   |".format(board[6], board[7]))
+        print("|   | /           \ |   |")
+        print("|   {}-------{}-------{}   |".format(board[3], board[4], board[5]))
+        print("| /         |         \ |")
+        print("{}-----------{}-----------{}".format(board[0], board[1], board[2]))
+        print()
+
 if __name__=="__main__":
     try: 
         with open(sys.argv[1], 'r') as f:
@@ -162,11 +178,19 @@ if __name__=="__main__":
         # Invoke MaxMin and play a game by first swaping board for prespective of black and swap back again
         movePlayedList = mmob.Swap(mmob.MaxMin(mmob.Swap(brd1List), depth)) 
         movePlayed = ''.join(movePlayedList)
+        
         print("\n## MiniMaxOpeningBlack.py ##\n")
         print("Given Board : " + brd1 + "\nGiven Depth : " + str(depth)+ "\n")
+        
         print("Board Position: ", movePlayed)
         print("Positions evaluated by static estimation: ", mmob.positionsEvaluated)
         print("MINIMAX estimate: ", mmob.minimaxEstimate * (-1))
+        
+        print("\nInput Board:\n")
+        mmob.printBoard(brd1)
+        print("\nOutput Board:\n")
+        mmob.printBoard(movePlayed)
+        
         with open(sys.argv[2], 'w') as f:
             f.write(movePlayed)
 

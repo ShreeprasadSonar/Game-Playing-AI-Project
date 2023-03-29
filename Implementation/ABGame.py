@@ -211,6 +211,22 @@ class ABGame(object) :
             i += 1
         return mnBrd 
 
+    def printBoard(self, board):
+        print("{}-----------{}-----------{}".format(board[19], board[20], board[21]))
+        print("| \         |         / |")
+        print("|   {}-------{}-------{}   |".format(board[16], board[17], board[18]))
+        print("|   | \     |     / |   |")
+        print("|   |   {}---{}---{}   |   |".format(board[13], board[14], board[15]))
+        print("|   |   |       |   |   |")
+        print("|   {}---{}       {}---{}---{}".format(board[8], board[9], board[10], board[11], board[12]))
+        print("|   |   |       |   |   |")
+        print("|   |   {}-------{}   |   |".format(board[6], board[7]))
+        print("|   | /           \ |   |")
+        print("|   {}-------{}-------{}   |".format(board[3], board[4], board[5]))
+        print("| /         |         \ |")
+        print("{}-----------{}-----------{}".format(board[0], board[1], board[2]))
+        print()
+
 
 if __name__=="__main__":
     # try: 
@@ -226,11 +242,19 @@ if __name__=="__main__":
         alpha, beta = float('-inf'), float('inf')     
         movePlayedList = abg.MaxMin(brd1List, depth, alpha, beta) # Invoke MaxMin
         movePlayed = ''.join(movePlayedList)
+        
         print("\n## ABGame.py ##\n")
         print("Given Board : " + brd1 + "\nGiven Depth : " + str(depth)+ "\n")
+        
         print("Board Position: ", movePlayed)
         print("Positions evaluated by static estimation: ", abg.positionsEvaluated)
         print("MINIMAX estimate: ", abg.minimaxEstimate)
+        
+        print("\nInput Board:\n")
+        abg.printBoard(brd1)
+        print("\nOutput Board:\n")
+        abg.printBoard(movePlayed)
+        
         with open(sys.argv[2], 'w') as f:
             f.write(movePlayed)
 

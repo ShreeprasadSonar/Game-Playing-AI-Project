@@ -3,19 +3,19 @@ class MiniMaxGameBlack(object) :
     positionsEvaluated = 0
     minimaxEstimate = 0
     def GenerateMovesMidgameEndgame(self, brdPos) :
-        return self.GenerateHopping(brdPos) if (brdPos.count('W') == 3) else self.GenerateMove(brdPos)
+        return self.GenerateHopping(brdPos) if (brdPos.count('B') == 3) else self.GenerateMove(brdPos)
 
     # Generates moves created by white pieces hopping (to be used in the endgame).
     def GenerateHopping(self, brdPos) :
         brdPosHopList, i =  [], 0
         while (i < len(brdPos)) :
-            if (brdPos[i] == 'W') :
+            if (brdPos[i] == 'B') :
                 j = 0
                 while (j < len(brdPos)) :
                     if (brdPos[j] == 'x') :
                         board = brdPos.copy()
                         board[i] = 'x'
-                        board[j] = 'W'
+                        board[j] = 'B'
                         if (self.CloseMill(j, board)) :
                             self.GenerateRemove(board, brdPosHopList)
                         else :
@@ -28,13 +28,13 @@ class MiniMaxGameBlack(object) :
     def GenerateMove(self, brdPos) :
         brdPosMoveList, i =  [], 0
         while (i < len(brdPos)) :
-            if (brdPos[i] == 'W') :
+            if (brdPos[i] == 'B') :
                 neighbourslist = self.Neighbours(i)
                 for j in neighbourslist :
                     if (brdPos[j] == 'x') :
                         board = brdPos.copy()
                         board[i] = 'x'
-                        board[j] = 'W'
+                        board[j] = 'B'
                         if (self.CloseMill(j, board)) :
                             self.GenerateRemove(board, brdPosMoveList)
                         else :
@@ -47,7 +47,7 @@ class MiniMaxGameBlack(object) :
         moves, i = brdPosList.copy(), 0
         while (i < len(brd)) :
             positionAppended = False
-            if (brd[i] == 'B') :
+            if (brd[i] == 'W') :
                 if (not(self.CloseMill(i, brd))) :
                     # print("In Black does not have a mill : ", brd)
                     board = brd.copy()
@@ -60,7 +60,17 @@ class MiniMaxGameBlack(object) :
             moves.append(board)
         return moves # positions are added to L by removing black pieces
     
-    def GenerateBlackMoves(self, brdPos) :
+    # def GenerateBlackMoves(self, brdPos) :
+    #     board, blackMoves, result = brdPos.copy(), [], []
+    #     # Swap W and B so that moves can be evaluated for B from prespective of W
+    #     board = self.Swap(board)
+    #     blackMoves = self.GenerateMovesMidgameEndgame(board)
+    #     for move in blackMoves :
+    #         move = self.Swap(move)
+    #         result.append(move)
+    #     return result
+    
+    def GenerateWhiteMoves(self, brdPos) :
         board, blackMoves, result = brdPos.copy(), [], []
         # Swap W and B so that moves can be evaluated for B from prespective of W
         board = self.Swap(board)
@@ -73,15 +83,28 @@ class MiniMaxGameBlack(object) :
     def StaticEstimation(self, brd) :
         self.positionsEvaluated += 1 
         whites, blacks = brd.count('W'), brd.count('B')
-        numBlackMoves = len(self.GenerateBlackMoves(brd))
+        numWhiteMoves = len(self.GenerateWhiteMoves(brd))
         if (blacks <= 2) :
-            return 10000
-        elif(whites <= 2) :
             return -10000
-        elif(numBlackMoves == 0) :
+        elif(whites <= 2) :
+            return 10000
+        elif(numWhiteMoves == 0) :
             return 10000
         else :
-            return ((1000 * (whites - blacks)) - numBlackMoves)
+            return ((1000 * (blacks - whites)) - numWhiteMoves)
+        
+    # def StaticEstimation(self, brd) :
+    #     self.positionsEvaluated += 1 
+    #     whites, blacks = brd.count('W'), brd.count('B')
+    #     numBlackMoves = len(self.GenerateBlackMoves(brd))
+    #     if (blacks <= 2) :
+    #         return 10000
+    #     elif(whites <= 2) :
+    #         return -10000
+    #     elif(numBlackMoves == 0) :
+    #         return 10000
+    #     else :
+    #         return ((1000 * (whites - blacks)) - numBlackMoves)
     
     def Swap(self, brd) :
         board = brd.copy()
@@ -170,42 +193,42 @@ class MiniMaxGameBlack(object) :
     def MaxMin(self, brdPos, depth):
         if depth == 0:
             return brdPos
-        # print("MaxMin Current Depth: " + str(depth) + " ##################################################################")
+        print("MaxMin Current Depth: " + str(depth) + " ##################################################################")
         depth -= 1
         # GenerateAdd Generates moves created by adding a white piece at x.
-        i, v, wMoves, mnBrd, mxBrd = 0, float('-inf'), self.GenerateMovesMidgameEndgame(brdPos), [], []
-        # for wMove in wMoves : print("Possible Moves For White: " +  ''.join(wMove))
+        i, v, bMoves, mnBrd, mxBrd = 0, float('-inf'), self.GenerateMovesMidgameEndgame(brdPos), [], []
+        for bMove in bMoves : print("Possible Moves For Black: " +  ''.join(bMove))
         # print("Possible Moves For White: " +  str(len(wMoves)))
         # For each child y (wMove) of x (wMoves)
-        while (i < len(wMoves)) :
+        while (i < len(bMoves)) :
                 # Tree for min
-            mnBrd = self.MinMax(wMoves[i], depth)
+            mnBrd = self.MinMax(bMoves[i], depth)
             staticEs = self.StaticEstimation(mnBrd)
             if (v < staticEs) :
                 v = staticEs
                 self.minimaxEstimate = v
-                mxBrd = wMoves[i]
+                mxBrd = bMoves[i]
             i += 1
         return mxBrd
 
     def MinMax(self, brdPos, depth) :
         if depth == 0:
             return brdPos
-        # print("MinMax Current Depth: " + str(depth) + " ##################################################################")
+        print("MinMax Current Depth: " + str(depth) + " ##################################################################")
         depth -= 1
         # GenerateBlackMoves Generates moves created by adding a black piece at x.
-        i, v, bMoves, mxBrd, mnBrd =  0, float('inf'), self.GenerateBlackMoves(brdPos), [], []
-        # for bMove in bMoves : print("Possible Moves For Black: " +  ''.join(bMove))
-        # print("Possible Moves For Black: " +  str(len(bMoves)))
-        while (i < len(bMoves)) :
+        i, v, wMoves, mxBrd, mnBrd =  0, float('inf'), self.GenerateWhiteMoves(brdPos), [], []
+        for wMove in wMoves : print("Possible Moves For White: " +  ''.join(wMove))
+        print("Possible Moves For Black: " +  str(len(wMoves)))
+        while (i < len(wMoves)) :
             # Tree for max
             staticEs = self.StaticEstimation(mxBrd)
             if (v > staticEs) :
                 v = staticEs
-                mnBrd = bMoves[i]
+                mnBrd = wMoves[i]
             i += 1
         return mnBrd 
-    
+
     def printBoard(self, board):
         print("{}-----------{}-----------{}".format(board[19], board[20], board[21]))
         print("| \         |         / |")
@@ -222,7 +245,6 @@ class MiniMaxGameBlack(object) :
         print("{}-----------{}-----------{}".format(board[0], board[1], board[2]))
         print()
 
-
 if __name__=="__main__":
     try: 
         with open(sys.argv[1], 'r') as f:
@@ -234,23 +256,16 @@ if __name__=="__main__":
         
         mmgb = MiniMaxGameBlack()    
         # Invoke MaxMin and play a game by first swaping board for prespective of black and swap back again   
-        movePlayedList = mmgb.Swap(mmgb.MaxMin(mmgb.Swap(brd1List), depth)) # Invoke MaxMin
+        movePlayedList = mmgb.MaxMin(brd1List, depth) # Invoke MaxMin
         movePlayed = ''.join(movePlayedList)
-        
-        print("\n## MiniMaxGameBlack.py ##\n")
+        print("\n## MiniMaxGameBlackV2.py ##\n")
         print("Given Board : " + brd1 + "\nGiven Depth : " + str(depth)+ "\n")
-        
         print("Board Position: ", movePlayed)
         print("Positions evaluated by static estimation: ", mmgb.positionsEvaluated)
         print("MINIMAX estimate: ", mmgb.minimaxEstimate * (-1))
-        
-        print("\nInput Board:\n")
-        mmgb.printBoard(brd1)
-        print("\nOutput Board:\n")
-        mmgb.printBoard(movePlayed)
-        
         with open(sys.argv[2], 'w') as f:
             f.write(movePlayed)
 
     except:
-        print("Please specify in format: Python MiniMaxGame.py board1.txt board2.txt 2")
+        print("Please specify in format: Python MiniMaxGameBlackV2.py board1.txt board2.txt 2")
+        

@@ -112,11 +112,11 @@ class MiniMaxOpening() :
     def MaxMin(self, brdPos, depth):
         if depth == 0:
             return brdPos
-        # print("MaxMin Current Depth: " + str(depth) + " ##################################################################")
+        print("MaxMin Current Depth: " + str(depth) + " ##################################################################")
         depth -= 1
         # GenerateAdd Generates moves created by adding a white piece at x.
         i, v, wMoves, mnBrd, mxBrd = 0, float('-inf'), self.GenerateAdd(brdPos), [], []
-        # for wMove in wMoves : print("Possible Moves For White: " +  ''.join(wMove))
+        for wMove in wMoves : print("Possible Moves For White: " +  ''.join(wMove))
         # print("Possible Moves For White: " +  str(len(wMoves)))
         # For each child y (wMove) of x (wMoves)
         while (i < len(wMoves)) :
@@ -133,11 +133,11 @@ class MiniMaxOpening() :
     def MinMax(self, brdPos, depth) :
         if depth == 0:
             return brdPos
-        # print("MinMax Current Depth: " + str(depth) + " ##################################################################")
+        print("MinMax Current Depth: " + str(depth) + " ##################################################################")
         depth -= 1
         # GenerateBlackMoves Generates moves created by adding a black piece at x.
         i, v, bMoves, mxBrd, mnBrd =  0, float('inf'), self.GenerateBlackMoves(brdPos), [], []
-        # for bMove in bMoves : print("Possible Moves For Black: " +  ''.join(bMove))
+        for bMove in bMoves : print("Possible Moves For Black: " +  ''.join(bMove))
         # print("Possible Moves For Black: " +  str(len(bMoves)))
         while (i < len(bMoves)) :
             # Tree for max
@@ -148,6 +148,22 @@ class MiniMaxOpening() :
                 mnBrd = bMoves[i]
             i += 1
         return mnBrd 
+
+    def printBoard(self, board):
+        print("{}-----------{}-----------{}".format(board[19], board[20], board[21]))
+        print("| \         |         / |")
+        print("|   {}-------{}-------{}   |".format(board[16], board[17], board[18]))
+        print("|   | \     |     / |   |")
+        print("|   |   {}---{}---{}   |   |".format(board[13], board[14], board[15]))
+        print("|   |   |       |   |   |")
+        print("|   {}---{}       {}---{}---{}".format(board[8], board[9], board[10], board[11], board[12]))
+        print("|   |   |       |   |   |")
+        print("|   |   {}-------{}   |   |".format(board[6], board[7]))
+        print("|   | /           \ |   |")
+        print("|   {}-------{}-------{}   |".format(board[3], board[4], board[5]))
+        print("| /         |         \ |")
+        print("{}-----------{}-----------{}".format(board[0], board[1], board[2]))
+        print()
 
 if __name__=="__main__":
     try: 
@@ -162,11 +178,19 @@ if __name__=="__main__":
         mmo = MiniMaxOpening()       
         movePlayedList = mmo.MaxMin(brd1List, depth) # Invoke MaxMin
         movePlayed = ''.join(movePlayedList)
+        
         print("\n## MiniMaxOpening.py ##\n")
         print("Given Board : " + brd1 + "\nGiven Depth : " + str(depth) + "\n")
+        
         print("Board Position: ", movePlayed)
         print("Positions evaluated by static estimation: ", mmo.positionsEvaluated)
         print("MINIMAX estimate: ", mmo.minimaxEstimate)
+        
+        print("\nInput Board:\n")
+        mmo.printBoard(brd1)
+        print("\nOutput Board:\n")
+        mmo.printBoard(movePlayed)
+        
         with open(sys.argv[2], 'w') as f:
             f.write(movePlayed)
 

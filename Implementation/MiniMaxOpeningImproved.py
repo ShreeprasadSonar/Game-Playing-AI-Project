@@ -1,5 +1,5 @@
 import sys
-class MiniMaxOpening() :
+class MiniMaxOpeningImproved() :
     positionsEvaluated = 0
     minimaxEstimate = 0
     
@@ -163,8 +163,24 @@ class MiniMaxOpening() :
             i += 1
         return mnBrd 
 
+    def printBoard(self, board):
+        print("{}-----------{}-----------{}".format(board[19], board[20], board[21]))
+        print("| \         |         / |")
+        print("|   {}-------{}-------{}   |".format(board[16], board[17], board[18]))
+        print("|   | \     |     / |   |")
+        print("|   |   {}---{}---{}   |   |".format(board[13], board[14], board[15]))
+        print("|   |   |       |   |   |")
+        print("|   {}---{}       {}---{}---{}".format(board[8], board[9], board[10], board[11], board[12]))
+        print("|   |   |       |   |   |")
+        print("|   |   {}-------{}   |   |".format(board[6], board[7]))
+        print("|   | /           \ |   |")
+        print("|   {}-------{}-------{}   |".format(board[3], board[4], board[5]))
+        print("| /         |         \ |")
+        print("{}-----------{}-----------{}".format(board[0], board[1], board[2]))
+        print()
+
 if __name__=="__main__":
-    # try: 
+    try: 
         with open(sys.argv[1], 'r') as f:
             brd1 = f.read()
             brd1List = list(brd1)
@@ -172,16 +188,24 @@ if __name__=="__main__":
         if len(brd1) != 22:
             print("Invalid board1.txt length : ", len(brd1))
         
-        mmo = MiniMaxOpening()       
-        movePlayedList = mmo.MaxMin(brd1List, depth) # Invoke MaxMin
+        mmoi = MiniMaxOpeningImproved()       
+        movePlayedList = mmoi.MaxMin(brd1List, depth) # Invoke MaxMin
         movePlayed = ''.join(movePlayedList)
+        
         print("\n## MiniMaxOpeningImproved.py ##\n")
         print("Given Board : " + brd1 + "\nGiven Depth : " + str(depth)+ "\n")
+        
         print("Board Position: ", movePlayed)
-        print("Positions evaluated by static estimation: ", mmo.positionsEvaluated)
-        print("MINIMAX estimate: ", mmo.minimaxEstimate)
+        print("Positions evaluated by static estimation: ", mmoi.positionsEvaluated)
+        print("MINIMAX estimate: ", mmoi.minimaxEstimate)
+        
+        print("\nInput Board:\n")
+        mmoi.printBoard(brd1)
+        print("\nOutput Board:\n")
+        mmoi.printBoard(movePlayed)
+        
         with open(sys.argv[2], 'w') as f:
             f.write(movePlayed)
 
-    # except:
-    #     print("Please specify in format: Python MiniMaxOpening.py board1.txt board2.txt 2")
+    except:
+        print("Please specify in format: Python MiniMaxOpening.py board1.txt board2.txt 2")
