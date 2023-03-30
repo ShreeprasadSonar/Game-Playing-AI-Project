@@ -36,7 +36,7 @@ class ABGame(object) :
                         board[i] = 'x'
                         board[j] = 'W'
                         if (self.CloseMill(j, board)) :
-                            self.GenerateRemove(board, brdPosMoveList)
+                            brdPosMoveList = self.GenerateRemove(board, brdPosMoveList)
                         else :
                             brdPosMoveList.append(board)
             i += 1
@@ -45,8 +45,8 @@ class ABGame(object) :
     # Method of generating moves created (Positions), after removing a black piece from the board.
     def GenerateRemove(self, brd,  brdPosList) :
         moves, i = brdPosList.copy(), 0
+        positionAppended = False
         while (i < len(brd)) :
-            positionAppended = False
             if (brd[i] == 'B') :
                 if (not(self.CloseMill(i, brd))) :
                     # print("In Black does not have a mill : ", brd)
@@ -229,7 +229,7 @@ class ABGame(object) :
 
 
 if __name__=="__main__":
-    # try: 
+    try: 
         with open(sys.argv[1], 'r') as f:
             brd1 = f.read()
             brd1List = list(brd1)
@@ -258,5 +258,5 @@ if __name__=="__main__":
         with open(sys.argv[2], 'w') as f:
             f.write(movePlayed)
 
-    # except:
+    except:
         print("Please specify in format: Python ABGame.py board1.txt board2.txt 2")

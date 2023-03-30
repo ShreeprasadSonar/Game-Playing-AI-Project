@@ -36,7 +36,7 @@ class MiniMaxGameBlack(object) :
                         board[i] = 'x'
                         board[j] = 'B'
                         if (self.CloseMill(j, board)) :
-                            self.GenerateRemove(board, brdPosMoveList)
+                            brdPosMoveList = self.GenerateRemove(board, brdPosMoveList)
                         else :
                             brdPosMoveList.append(board)
             i += 1

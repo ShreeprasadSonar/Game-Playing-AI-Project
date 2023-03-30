@@ -36,20 +36,20 @@ class MiniMaxGame(object) :
                         board[i] = 'x'
                         board[j] = 'W'
                         if (self.CloseMill(j, board)) :
-                            self.GenerateRemove(board, brdPosMoveList)
+                            brdPosMoveList = self.GenerateRemove(board, brdPosMoveList)
                         else :
                             brdPosMoveList.append(board)
             i += 1
+        # for string in brdPosMoveList:   print("Generate Move position : " + ''.join(string))
         return brdPosMoveList
     
     # Method of generating moves created (Positions), after removing a black piece from the board.
     def GenerateRemove(self, brd,  brdPosList) :
         moves, i = brdPosList.copy(), 0
+        positionAppended = False
         while (i < len(brd)) :
-            positionAppended = False
             if (brd[i] == 'B') :
                 if (not(self.CloseMill(i, brd))) :
-                    # print("In Black does not have a mill : ", brd)
                     board = brd.copy()
                     board[i] = 'x'
                     positionAppended = True
@@ -170,7 +170,7 @@ class MiniMaxGame(object) :
     def MaxMin(self, brdPos, depth):
         if depth == 0:
             return brdPos
-        # print("MaxMin Current Depth: " + str(depth) + " ##################################################################")
+        print("MaxMin Current Depth: " + str(depth) + " ##################################################################")
         depth -= 1
         # GenerateAdd Generates moves created by adding a white piece at x.
         i, v, wMoves, mnBrd, mxBrd = 0, float('-inf'), self.GenerateMovesMidgameEndgame(brdPos), [], []

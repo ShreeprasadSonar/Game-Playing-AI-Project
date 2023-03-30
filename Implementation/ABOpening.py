@@ -21,8 +21,8 @@ class ABOpening() :
     # Method of generating moves created (Positions), after removing a black piece from the board.
     def GenerateRemove(self, brd,  brdPosList):
         moves, i = brdPosList.copy(), 0
+        positionAppended = False
         while (i < len(brd)) :
-            positionAppended = False
             if (brd[i] == 'B') :
                 if (not(self.CloseMill(i, brd))) :
                     # print("In Black does not have a mill : ", brd)
