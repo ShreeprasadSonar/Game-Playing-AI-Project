@@ -74,9 +74,8 @@ class MiniMaxGameImproved(object) :
     def StaticEstimation(self, brd) :  
         self.positionsEvaluated += 1  
         wbMillDifference = self.millCountDiff(brd)
-        numWhiteMoves = len(self.GenerateMovesMidgameEndgame(brd))
-        numBlackMoves = len(self.GenerateBlackMoves(brd))
-        return (10 * (brd.count('W') - brd.count('B'))) + (6 * wbMillDifference) + (3*(numWhiteMoves - numBlackMoves))
+        wbPotentialMillsDifference = self.potentialMillsDiff(brd)
+        return (10* (brd.count('W') - brd.count('B'))) + (8*wbMillDifference) +  (5*(wbPotentialMillsDifference))
     
     def millCountDiff(self, brd):
         wMills, bMills = 0, 0
@@ -88,6 +87,34 @@ class MiniMaxGameImproved(object) :
                 elif brd[mill[0]] == 'B':
                     bMills += 1
         return wMills - bMills
+    
+    def potentialMillsDiff(self, brd):
+        wpMills = 0
+        bpMills = 0
+        # print("For board : " + ''.join(brd)+ " ##############################################")
+        for i in range(len(brd)):
+            if brd[i] == 'x':
+                neighbours = self.Neighbours(i)
+                board = brd.copy()
+                board[i] = 'W'
+                if self.CloseMill(i, board):
+                    # print("Mill closes for position " + str(i) + " : " + ''.join(board))
+                    wpMills +=3 # If possible mill is formed
+                    for n in neighbours:
+                        if board[n] == 'W' and not(self.CloseMill(n, board)):
+                            wpMills += 1 # When there are neighbouring white pieces which are not part of a mill to fill the position
+                        elif board[n] == 'B':
+                            wpMills -= 2 # When there are neighbouring black pieces to block the position
+                board[i] = 'B'
+                if self.CloseMill(i, board):
+                    bpMills +=3 
+                    for n in neighbours:
+                        if board[n] == 'B' and not(self.CloseMill(n, board)):
+                            bpMills += 1 # When there are neighbouring black pieces which are not part of a mill to fill the position
+                        elif board[n] == 'W':
+                            bpMills -= 2 # When there are neighbouring white pieces to block the position
+        return wpMills - bpMills
+                
     
     def Swap(self, brd) :
         board = brd.copy()
@@ -259,4 +286,4 @@ if __name__=="__main__":
             f.write(movePlayed)
 
     except:
-        print("Please specify in format: Python MiniMaxGame.py board1.txt board2.txt 2")
+        print("Please specify in format: Python MiniMaxGameImproved.py board1.txt board2.txt 2")
