@@ -76,7 +76,7 @@ class MiniMaxGameImproved(object) :
         wbMillDifference = self.millCountDiff(brd)
         numWhiteMoves = len(self.GenerateMovesMidgameEndgame(brd))
         numBlackMoves = len(self.GenerateBlackMoves(brd))
-        return (3 * (brd.count('W') - brd.count('B'))) + (2 * wbMillDifference) + (numWhiteMoves - numBlackMoves)
+        return (10 * (brd.count('W') - brd.count('B'))) + (6 * wbMillDifference) + (3*(numWhiteMoves - numBlackMoves))
     
     def millCountDiff(self, brd):
         wMills, bMills = 0, 0
@@ -91,9 +91,9 @@ class MiniMaxGameImproved(object) :
     
     def Swap(self, brd) :
         board = brd.copy()
-        # Create a dictionary to map 'W' to 'B' and 'B' to 'W'
+        # Dictionary to map 'W' to 'B' and 'B' to 'W'
         swap_dict = {'W': 'B', 'B': 'W'}
-        # Use a list comprehension to replace each character in the string with its swapped value
+        # Using a list comprehension to replace each character in the string with its swapped value
         swapped_brd = ''.join([swap_dict.get(char, char) for char in ''.join(board)])
         return list(swapped_brd)
     

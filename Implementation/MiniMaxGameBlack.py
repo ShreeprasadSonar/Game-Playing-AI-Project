@@ -199,6 +199,7 @@ class MiniMaxGameBlack(object) :
         # print("Possible Moves For Black: " +  str(len(bMoves)))
         while (i < len(bMoves)) :
             # Tree for max
+            mxBrd = self.MaxMin(bMoves[i], depth)
             staticEs = self.StaticEstimation(mxBrd)
             if (v > staticEs) :
                 v = staticEs
