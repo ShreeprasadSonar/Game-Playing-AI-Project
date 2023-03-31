@@ -34,11 +34,7 @@ class MiniMaxOpening() :
         if positionAppended == False:
             board = brd.copy()
             moves.append(board)
-        fmoves = []
-        for string in moves:
-            if string not in fmoves:
-                fmoves.append(string)
-        return fmoves # positions are added to L by removing black pieces
+        return moves # positions are added to L by removing black pieces
     
     # This score is used by the minimax algorithm to determine the best possible move for a player to make.
     def StaticEstimation(self, brd) :  

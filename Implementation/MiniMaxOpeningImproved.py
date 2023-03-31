@@ -41,7 +41,7 @@ class MiniMaxOpeningImproved() :
         self.positionsEvaluated += 1  
         wbMillDifference = self.millCountDiff(brd)
         wbPotentialMillsDifference = self.potentialMillsDiff(brd)
-        return (10* (brd.count('W') - brd.count('B'))) + (8*wbMillDifference) +  (5*(wbPotentialMillsDifference))
+        return (40* (brd.count('W') - brd.count('B'))) + (8*wbMillDifference) +  (5*(wbPotentialMillsDifference))
     
     def millCountDiff(self, brd):
         wMills, bMills = 0, 0
