@@ -170,7 +170,7 @@ class MiniMaxGame(object) :
     def MaxMin(self, brdPos, depth):
         if depth == 0:
             return brdPos
-        print("MaxMin Current Depth: " + str(depth) + " ##################################################################")
+        # print("MaxMin Current Depth: " + str(depth) + " ##################################################################")
         depth -= 1
         # GenerateAdd Generates moves created by adding a white piece at x.
         i, v, wMoves, mnBrd, mxBrd = 0, float('-inf'), self.GenerateMovesMidgameEndgame(brdPos), [], []
@@ -242,7 +242,7 @@ if __name__=="__main__":
         print("Board Position: ", movePlayed)
         print("Positions evaluated by static estimation: ", mmg.positionsEvaluated)
         print("MINIMAX estimate: ", mmg.minimaxEstimate)
-        
+
         print("\nInput Board:\n")
         mmg.printBoard(brd1)
         print("\nOutput Board:\n")

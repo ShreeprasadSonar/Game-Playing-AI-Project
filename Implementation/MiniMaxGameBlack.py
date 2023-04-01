@@ -243,7 +243,7 @@ if __name__=="__main__":
         
         print("Board Position: ", movePlayed)
         print("Positions evaluated by static estimation: ", mmgb.positionsEvaluated)
-        print("MINIMAX estimate: ", mmgb.minimaxEstimate * (-1))
+        print("MINIMAX estimate: ", mmgb.minimaxEstimate)
         
         print("\nInput Board:\n")
         mmgb.printBoard(brd1)

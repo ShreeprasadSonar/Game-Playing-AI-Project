@@ -125,8 +125,8 @@ class MiniMaxOpeningBlack() :
             staticEs = self.StaticEstimation(mnBrd)
             if (v < staticEs) :
                 v = staticEs
-                self.minimaxEstimate = v
                 mxBrd = wMoves[i]
+                self.minimaxEstimate = v
             i += 1
         return mxBrd
 
@@ -185,6 +185,7 @@ if __name__=="__main__":
         print("Board Position: ", movePlayed)
         print("Positions evaluated by static estimation: ", mmob.positionsEvaluated)
         print("MINIMAX estimate: ", mmob.minimaxEstimate)
+
         
         print("\nInput Board:\n")
         mmob.printBoard(brd1)
