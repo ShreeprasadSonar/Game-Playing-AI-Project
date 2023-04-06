@@ -1,7 +1,8 @@
 import sys
 from commonFunctions import commonFunctions
+import time
 
-class MiniMaxOpeningImproved() :
+class TournamentGame(object) :
     positionsEvaluated = 0
     minimaxEstimate = 0
     cf = commonFunctions()
@@ -14,15 +15,18 @@ class MiniMaxOpeningImproved() :
         return (40* (brd.count('W') - brd.count('B'))) + (8*wbMillDifference) +  (5*(wbPotentialMillsDifference))
     
     def millCountDiff(self, brd):
-        wMills, bMills = 0, 0
-        mills = [[0,1,2], [0,3,6], [2,5,7], [2,12,21], [3,4,5], [5,11,18], [6,9,13], [7,10,15], [10,11,12], [13,14,15], [13,16,19], [14,17,20], [15,18,21], [16,17,18], [19,20,21]]
-        for mill in  mills:
-            if brd[mill[0]] == brd[mill[1]] == brd[mill[2]]:
-                if brd[mill[0]] == 'W':
-                    wMills += 1
-                elif brd[mill[0]] == 'B':
-                    bMills += 1
-        return wMills - bMills
+        try:
+            wMills, bMills = 0, 0
+            mills = [[0,1,2], [0,3,6], [2,5,7], [2,12,21], [3,4,5], [5,11,18], [6,9,13], [7,10,15], [10,11,12], [13,14,15], [13,16,19], [14,17,20], [15,18,21], [16,17,18], [19,20,21]]
+            for mill in  mills:
+                if brd[mill[0]] == brd[mill[1]] == brd[mill[2]]:
+                    if brd[mill[0]] == 'W':
+                        wMills += 1
+                    elif brd[mill[0]] == 'B':
+                        bMills += 1
+            return wMills - bMills
+        except:
+            return 0
     
     def potentialMillsDiff(self, brd):
         wpMills = 0
@@ -49,60 +53,85 @@ class MiniMaxOpeningImproved() :
                         elif board[n] == 'W':
                             bpMills -= 2 # When there are neighbouring white pieces to block the position
         return wpMills - bpMills
-    
 
-    def MaxMin(self, brdPos, depth):
+    def MaxMin(self, brdPos, depth, alpha, beta, startTime, timeLimit):
         if depth == 0:
             return brdPos
         depth -= 1
         # GenerateAdd Generates moves created by adding a white piece at x.
-        i, v, wMoves, mnBrd, mxBrd = 0, float('-inf'), self.cf.GenerateAdd(brdPos), [], []
+        i, v, wMoves, mnBrd, mxBrd = 0, float('-inf'), self.cf.GenerateMovesMidgameEndgame(brdPos), [], []
         while (i < len(wMoves)) :
             # Tree for min
-            mnBrd = self.MinMax(wMoves[i], depth)
+            mnBrd = self.MinMax(wMoves[i], depth, alpha, beta, startTime, timeLimit)
+            if mnBrd is None:
+                return None
             staticEs = self.StaticEstimation(mnBrd)
             if (v < staticEs) :
                 v = staticEs
                 self.minimaxEstimate = v
                 mxBrd = wMoves[i]
+            if (v >= beta) : return mxBrd
+            else : alpha = max(v, alpha)
             i += 1
         return mxBrd
 
-    def MinMax(self, brdPos, depth) :
+    def MinMax(self, brdPos, depth, alpha, beta, startTime, timeLimit) :
+        if (time.time() - startTime) > timeLimit:
+            return None
         if depth == 0:
             return brdPos
         depth -= 1
         # GenerateBlackMoves Generates moves created by adding a black piece at x.
-        i, v, bMoves, mxBrd, mnBrd =  0, float('inf'), self.cf.GenerateBlackMovesOpening(brdPos), [], []
+        i, v, bMoves, mxBrd, mnBrd =  0, float('inf'), self.cf.GenerateBlackMoves(brdPos), [], []
         while (i < len(bMoves)) :
             # Tree for max
-            mxBrd = self.MaxMin(bMoves[i], depth)
+            mxBrd = self.MaxMin(bMoves[i], depth, alpha, beta, startTime, timeLimit)
+            if mxBrd is None:
+                return None
             staticEs = self.StaticEstimation(mxBrd)
             if (v > staticEs) :
                 v = staticEs
                 mnBrd = bMoves[i]
+            if (v <= alpha) : return mnBrd
+            else: beta = min(v, beta)
             i += 1
         return mnBrd 
+
 
 if __name__=="__main__":
     try: 
         with open(sys.argv[1], 'r') as f:
             brd1 = f.read()
             brd1List = list(brd1)
-        depth = int(sys.argv[3])
+        depth = 0
         if len(brd1) != 22:
             print("Invalid board1.txt length : ", len(brd1))
         
-        mmoi = MiniMaxOpeningImproved()       
-        movePlayedList = mmoi.MaxMin(brd1List, depth) # Invoke MaxMin
-        movePlayed = ''.join(movePlayedList)
+        tg = TournamentGame()
+        startTime = time.time()
+        timeLimit = 20
+        
+        for depth in range(1, 100):  
+            alpha, beta = float('-inf'), float('inf')     
+            movePlayedList = tg.MaxMin(brd1List, depth, alpha, beta, startTime, timeLimit) # Invoke MaxMin
+            if movePlayedList is None:
+                break
+            movePlayed = ''.join(movePlayedList)
+        
+        print("\n## TournamentGame.py ##\n")
+        print("Given Board : " + brd1 + "\nGiven Depth : " + str(depth)+ "\n")
         
         print("Board Position: ", movePlayed)
-        print("Positions evaluated by static estimation: ", mmoi.positionsEvaluated)
-        print("MINIMAX estimate: ", mmoi.minimaxEstimate)
+        print("Positions evaluated by static estimation: ", tg.positionsEvaluated)
+        print("MINIMAX estimate: ", tg.minimaxEstimate)
+        
+        print("\nInput Board:\n")
+        tg.cf.printBoard(brd1)
+        print("\nOutput Board:\n")
+        tg.cf.printBoard(movePlayed)
         
         with open(sys.argv[2], 'w') as f:
             f.write(movePlayed)
 
     except:
-        print("Please specify in format: Python MiniMaxOpeningImproved.py board1.txt board2.txt 2")
+        print("Please specify in format: Python TournamentGame.py board1.txt board2.txt")

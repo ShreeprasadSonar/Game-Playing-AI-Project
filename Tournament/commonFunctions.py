@@ -175,3 +175,19 @@ class commonFunctions:
             elif loc==21 :
                 return True if ((board[19] == c and board[20] == c) or (board[15] == c and board[18] == c) or (board[2] == c and board[12] == c)) else False
         return False
+    
+    def printBoard(self, board):
+        print("{}-----------{}-----------{}".format(board[19], board[20], board[21]))
+        print("| \         |         / |")
+        print("|   {}-------{}-------{}   |".format(board[16], board[17], board[18]))
+        print("|   | \     |     / |   |")
+        print("|   |   {}---{}---{}   |   |".format(board[13], board[14], board[15]))
+        print("|   |   |       |   |   |")
+        print("|   {}---{}       {}---{}---{}".format(board[8], board[9], board[10], board[11], board[12]))
+        print("|   |   |       |   |   |")
+        print("|   |   {}-------{}   |   |".format(board[6], board[7]))
+        print("|   | /           \ |   |")
+        print("|   {}-------{}-------{}   |".format(board[3], board[4], board[5]))
+        print("| /         |         \ |")
+        print("{}-----------{}-----------{}".format(board[0], board[1], board[2]))
+        print()

@@ -33,7 +33,7 @@ class MiniMaxOpening() :
             return brdPos
         depth -= 1
         # GenerateBlackMoves Generates moves created by adding a black piece at x.
-        i, v, bMoves, mxBrd, mnBrd =  0, float('inf'), self.cf.GenerateBlackMoves(brdPos), [], []
+        i, v, bMoves, mxBrd, mnBrd =  0, float('inf'), self.cf.GenerateBlackMovesOpening(brdPos), [], []
         while (i < len(bMoves)) :
             # Tree for max
             mxBrd = self.MaxMin(bMoves[i], depth)
