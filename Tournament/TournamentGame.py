@@ -121,9 +121,9 @@ if __name__=="__main__":
         print("\n## TournamentGame.py ##\n")
         print("Given Board : " + brd1 + "\nGiven Depth : " + str(depth)+ "\n")
         
-        print("Board Position: ", movePlayed)
-        print("Positions evaluated by static estimation: ", tg.positionsEvaluated)
-        print("MINIMAX estimate: ", tg.minimaxEstimate)
+        print("Move : ", movePlayed)
+        # print("Positions evaluated by static estimation: ", tg.positionsEvaluated)
+        # print("MINIMAX estimate: ", tg.minimaxEstimate)
         
         print("\nInput Board:\n")
         tg.cf.printBoard(brd1)

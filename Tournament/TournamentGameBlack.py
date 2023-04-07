@@ -2,19 +2,13 @@ import sys
 from commonFunctions import commonFunctions
 import time
 
-class TournamentOpening() :
+class TournamentGame(object) :
     positionsEvaluated = 0
     minimaxEstimate = 0
     cf = commonFunctions()
     
     # This score is used by the minimax algorithm to determine the best possible move for a player to make.
-    def StaticEstimation(self, brd) : 
-        # bonus = 0 
-        # for j in [3, 5, 16, 18]:
-        #     if brd1List[j] == 'W':
-        #        bonus += 100
-        # if bonus == 400:
-        #     print(bonus)
+    def StaticEstimation(self, brd) :  
         self.positionsEvaluated += 1  
         wbMillDifference = self.millCountDiff(brd)
         wbPotentialMillsDifference = self.potentialMillsDiff(brd)
@@ -32,7 +26,6 @@ class TournamentOpening() :
                         bMills += 1
             return wMills - bMills
         except:
-            # print(brd)
             return 0
     
     def potentialMillsDiff(self, brd):
@@ -60,42 +53,18 @@ class TournamentOpening() :
                         elif board[n] == 'W':
                             bpMills -= 2 # When there are neighbouring white pieces to block the position
         return wpMills - bpMills
-    
-    def potentialblackMill(self, brdpos):
-        for i in range(len(brdpos)):
-            if brdpos[i] == 'x':
-                board = brdpos.copy()
-                board[i] = 'B'
-                if self.cf.CloseMill(i, board):
-                    return True
-        return False
-    
-    def potentialwhiteMill(self, brdpos):
-        for i in range(len(brdpos)):
-            if brdpos[i] == 'x':
-                board = brdpos.copy()
-                board[i] = 'W'
-                if self.cf.CloseMill(i, board):
-                    return True
-        return False
 
     def MaxMin(self, brdPos, depth, alpha, beta, startTime, timeLimit):
-        if (time.time() - startTime) > timeLimit:
-            return None
         if depth == 0:
             return brdPos
         depth -= 1
-        # print("For depth "+str(depth)+" #############################################")
         # GenerateAdd Generates moves created by adding a white piece at x.
-        i, v, wMoves, mnBrd, mxBrd = 0, float('-inf'), self.cf.GenerateAdd(brdPos), [], []
-        # for wMove in wMoves : print("Possible Moves For White: " +  ''.join(wMove))          
-        # print("Possible Moves For White: " +  str(len(wMoves)))
-        # For each child y (wMove) of x (wMoves)
+        i, v, wMoves, mnBrd, mxBrd = 0, float('-inf'), self.cf.GenerateMovesMidgameEndgame(brdPos), [], []
         while (i < len(wMoves)) :
             # Tree for min
             mnBrd = self.MinMax(wMoves[i], depth, alpha, beta, startTime, timeLimit)
             if mnBrd is None:
-                return None     
+                return None
             staticEs = self.StaticEstimation(mnBrd)
             if (v < staticEs) :
                 v = staticEs
@@ -113,9 +82,7 @@ class TournamentOpening() :
             return brdPos
         depth -= 1
         # GenerateBlackMoves Generates moves created by adding a black piece at x.
-        i, v, bMoves, mxBrd, mnBrd =  0, float('inf'), self.cf.GenerateBlackMovesOpening(brdPos), [], []
-        # if len(bMoves) == 0:
-        #     print("bMoves ch yet nahiye hya board sathi: ", self.cf.printBoard(''.join(brdPos)))
+        i, v, bMoves, mxBrd, mnBrd =  0, float('inf'), self.cf.GenerateBlackMoves(brdPos), [], []
         while (i < len(bMoves)) :
             # Tree for max
             mxBrd = self.MaxMin(bMoves[i], depth, alpha, beta, startTime, timeLimit)
@@ -129,51 +96,42 @@ class TournamentOpening() :
             else: beta = min(v, beta)
             i += 1
         return mnBrd 
-        
+
+
 if __name__=="__main__":
-    # try: 
+    try: 
         with open(sys.argv[1], 'r') as f:
             brd1 = f.read()
             brd1List = list(brd1)
         depth = 0
         if len(brd1) != 22:
             print("Invalid board1.txt length : ", len(brd1))
-            brd1List = brd1List[0:22]
-            brd1 = brd1[0:22]
-            
         
-        to = TournamentOpening()       
+        tg = TournamentGame()
         startTime = time.time()
-        timeLimit = 5
+        timeLimit = 20
         
-        if brd1List.count('B')<5 and not(to.potentialblackMill(brd1List)) and not(to.potentialwhiteMill(brd1List)):
-            for j in [5, 3, 18, 16]:
-                if brd1List[j] == 'x':
-                   brd1List[j] = 'W' 
-                   movePlayed = ''.join(brd1List)
-                   break
-        else:
-            for depth in range(1, 3):  
-                alpha, beta = float('-inf'), float('inf')
-                movePlayedList = to.MaxMin(brd1List, depth, alpha, beta, startTime, timeLimit) # Invoke MaxMin
-                if movePlayedList is None:
-                    break
-                movePlayed = ''.join(movePlayedList)
+        for depth in range(1, 100):  
+            alpha, beta = float('-inf'), float('inf')     
+            movePlayedList = tg.MaxMin(tg.cf.Swap(brd1List), depth, alpha, beta, startTime, timeLimit) # Invoke MaxMin
+            if movePlayedList is None:
+                break
+            movePlayed = ''.join(tg.cf.Swap(movePlayedList))
         
-        print("\n## TournamentOpening.py ##\n")
+        print("\n## TournamentGame.py ##\n")
         print("Given Board : " + brd1 + "\nDepth Covered : " + str(depth)+ "\n")
         
         print("Move : ", movePlayed)
-        # print("Positions evaluated by static estimation: ", to.positionsEvaluated)
-        print("MINIMAX estimate: ", to.minimaxEstimate)
+        # print("Positions evaluated by static estimation: ", tg.positionsEvaluated)
+        # print("MINIMAX estimate: ", tg.minimaxEstimate)
         
         print("\nInput Board:\n")
-        to.cf.printBoard(brd1)
+        tg.cf.printBoard(brd1)
         print("\nOutput Board:\n")
-        to.cf.printBoard(movePlayed)
+        tg.cf.printBoard(movePlayed)
         
         with open(sys.argv[2], 'w') as f:
             f.write(movePlayed)
 
-    # except:
-    #     print("Please specify in format: Python TournamentOpening.py board1.txt board2.txt")
+    except:
+        print("Please specify in format: Python TournamentGame.py board1.txt board2.txt")
