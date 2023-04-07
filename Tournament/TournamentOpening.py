@@ -21,19 +21,19 @@ class TournamentOpening() :
         return (40* (brd.count('W') - brd.count('B'))) + (8*wbMillDifference) +  (5*(wbPotentialMillsDifference))
     
     def millCountDiff(self, brd):
-        try:
-            wMills, bMills = 0, 0
-            mills = [[0,1,2], [0,3,6], [2,5,7], [2,12,21], [3,4,5], [5,11,18], [6,9,13], [7,10,15], [10,11,12], [13,14,15], [13,16,19], [14,17,20], [15,18,21], [16,17,18], [19,20,21]]
-            for mill in  mills:
+        wMills, bMills = 0, 0
+        mills = [[0,1,2], [0,3,6], [2,5,7], [2,12,21], [3,4,5], [5,11,18], [6,9,13], [7,10,15], [10,11,12], [13,14,15], [13,16,19], [14,17,20], [15,18,21], [16,17,18], [19,20,21]]
+        for mill in  mills:
+            try:
                 if brd[mill[0]] == brd[mill[1]] == brd[mill[2]]:
                     if brd[mill[0]] == 'W':
                         wMills += 1
                     elif brd[mill[0]] == 'B':
                         bMills += 1
-            return wMills - bMills
-        except:
-            # print(brd)
-            return 0
+            except:
+                print(brd)
+                continue        
+        return wMills - bMills
     
     def potentialMillsDiff(self, brd):
         wpMills = 0
@@ -46,19 +46,9 @@ class TournamentOpening() :
                 if self.cf.CloseMill(i, board):
                     # print("Mill closes for position " + str(i) + " : " + ''.join(board))
                     wpMills +=3 # If possible mill is formed
-                    for n in neighbours:
-                        if board[n] == 'W' and not(self.cf.CloseMill(n, board)):
-                            wpMills += 1 # When there are neighbouring white pieces which are not part of a mill to fill the position
-                        elif board[n] == 'B':
-                            wpMills -= 2 # When there are neighbouring black pieces to block the position
                 board[i] = 'B'
                 if self.cf.CloseMill(i, board):
                     bpMills +=3 
-                    for n in neighbours:
-                        if board[n] == 'B' and not(self.cf.CloseMill(n, board)):
-                            bpMills += 1 # When there are neighbouring black pieces which are not part of a mill to fill the position
-                        elif board[n] == 'W':
-                            bpMills -= 2 # When there are neighbouring white pieces to block the position
         return wpMills - bpMills
     
     def potentialblackMill(self, brdpos):
@@ -145,14 +135,20 @@ if __name__=="__main__":
         to = TournamentOpening()       
         startTime = time.time()
         timeLimit = 5
+        played = False
+        
+        print("\nInput Board:\n")
+        to.cf.printBoard(brd1)
         
         if brd1List.count('B')<5 and not(to.potentialblackMill(brd1List)) and not(to.potentialwhiteMill(brd1List)):
             for j in [5, 3, 18, 16]:
                 if brd1List[j] == 'x':
                    brd1List[j] = 'W' 
                    movePlayed = ''.join(brd1List)
+                   played = True
                    break
-        else:
+                   
+        if not played:
             for depth in range(1, 3):  
                 alpha, beta = float('-inf'), float('inf')
                 movePlayedList = to.MaxMin(brd1List, depth, alpha, beta, startTime, timeLimit) # Invoke MaxMin
@@ -167,8 +163,6 @@ if __name__=="__main__":
         # print("Positions evaluated by static estimation: ", to.positionsEvaluated)
         print("MINIMAX estimate: ", to.minimaxEstimate)
         
-        print("\nInput Board:\n")
-        to.cf.printBoard(brd1)
         print("\nOutput Board:\n")
         to.cf.printBoard(movePlayed)
         

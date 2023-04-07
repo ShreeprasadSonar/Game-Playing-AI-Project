@@ -9,24 +9,29 @@ class TournamentGame(object) :
     
     # This score is used by the minimax algorithm to determine the best possible move for a player to make.
     def StaticEstimation(self, brd) :  
+        bonus = 0
+        if brd.count('B') < 3:
+            bonus = 10000
+        elif brd.count('W') < 3:  
+            bonus = -10000
         self.positionsEvaluated += 1  
         wbMillDifference = self.millCountDiff(brd)
         wbPotentialMillsDifference = self.potentialMillsDiff(brd)
-        return (40* (brd.count('W') - brd.count('B'))) + (8*wbMillDifference) +  (5*(wbPotentialMillsDifference))
+        return (40* (brd.count('W') - brd.count('B'))) + (8*wbMillDifference) +  (5*(wbPotentialMillsDifference)) + bonus
     
     def millCountDiff(self, brd):
-        try:
-            wMills, bMills = 0, 0
-            mills = [[0,1,2], [0,3,6], [2,5,7], [2,12,21], [3,4,5], [5,11,18], [6,9,13], [7,10,15], [10,11,12], [13,14,15], [13,16,19], [14,17,20], [15,18,21], [16,17,18], [19,20,21]]
-            for mill in  mills:
+        wMills, bMills = 0, 0
+        mills = [[0,1,2], [0,3,6], [2,5,7], [2,12,21], [3,4,5], [5,11,18], [6,9,13], [7,10,15], [10,11,12], [13,14,15], [13,16,19], [14,17,20], [15,18,21], [16,17,18], [19,20,21]]
+        for mill in  mills:
+            try:
                 if brd[mill[0]] == brd[mill[1]] == brd[mill[2]]:
                     if brd[mill[0]] == 'W':
                         wMills += 1
                     elif brd[mill[0]] == 'B':
                         bMills += 1
-            return wMills - bMills
-        except:
-            return 0
+            except:
+                continue        
+        return wMills - bMills
     
     def potentialMillsDiff(self, brd):
         wpMills = 0
@@ -43,7 +48,7 @@ class TournamentGame(object) :
                         if board[n] == 'W' and not(self.cf.CloseMill(n, board)):
                             wpMills += 1 # When there are neighbouring white pieces which are not part of a mill to fill the position
                         elif board[n] == 'B':
-                            wpMills -= 2 # When there are neighbouring black pieces to block the position
+                            wpMills -= 3 # When there are neighbouring black pieces to block the position
                 board[i] = 'B'
                 if self.cf.CloseMill(i, board):
                     bpMills +=3 
@@ -51,7 +56,7 @@ class TournamentGame(object) :
                         if board[n] == 'B' and not(self.cf.CloseMill(n, board)):
                             bpMills += 1 # When there are neighbouring black pieces which are not part of a mill to fill the position
                         elif board[n] == 'W':
-                            bpMills -= 2 # When there are neighbouring white pieces to block the position
+                            bpMills -= 3 # When there are neighbouring white pieces to block the position
         return wpMills - bpMills
 
     def MaxMin(self, brdPos, depth, alpha, beta, startTime, timeLimit):
@@ -109,7 +114,10 @@ if __name__=="__main__":
         
         tg = TournamentGame()
         startTime = time.time()
-        timeLimit = 20
+        timeLimit = 5
+        
+        print("\nInput Board:\n")
+        tg.cf.printBoard(brd1)
         
         for depth in range(1, 100):  
             alpha, beta = float('-inf'), float('inf')     
@@ -124,9 +132,7 @@ if __name__=="__main__":
         print("Move : ", movePlayed)
         # print("Positions evaluated by static estimation: ", tg.positionsEvaluated)
         # print("MINIMAX estimate: ", tg.minimaxEstimate)
-        
-        print("\nInput Board:\n")
-        tg.cf.printBoard(brd1)
+
         print("\nOutput Board:\n")
         tg.cf.printBoard(movePlayed)
         
