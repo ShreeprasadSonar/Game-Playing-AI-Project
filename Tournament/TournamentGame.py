@@ -131,7 +131,7 @@ if __name__=="__main__":
         
         tg = TournamentGame()
         startTime = time.time()
-        timeLimit = 5
+        timeLimit = 10
         originalBoard = brd1List
         
         print("\nInput Board:\n")

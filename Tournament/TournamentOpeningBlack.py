@@ -39,9 +39,19 @@ class TournamentOpening() :
                 if self.cf.CloseMill(i, board):
                     # print("Mill closes for position " + str(i) + " : " + ''.join(board))
                     wpMills +=3 # If possible mill is formed
+                    for n in neighbours:
+                        if board[n] == 'W' and not(self.cf.CloseMill(n, board)):
+                            wpMills += 1 # When there are neighbouring white pieces which are not part of a mill to fill the position
+                        elif board[n] == 'B':
+                            wpMills -= 3 # When there are neighbouring black pieces to block the position
                 board[i] = 'B'
                 if self.cf.CloseMill(i, board):
                     bpMills +=3 
+                    for n in neighbours:
+                        if board[n] == 'B' and not(self.cf.CloseMill(n, board)):
+                            bpMills += 1 # When there are neighbouring black pieces which are not part of a mill to fill the position
+                        elif board[n] == 'W':
+                            bpMills -= 3 # When there are neighbouring white pieces to block the position
         return wpMills - bpMills
     
     def potentialblackMill(self, brdpos):
