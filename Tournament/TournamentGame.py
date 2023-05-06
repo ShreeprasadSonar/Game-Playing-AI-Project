@@ -8,12 +8,14 @@ class TournamentGame(object) :
     cf = commonFunctions()
     
     # This score is used by the minimax algorithm to determine the best possible move for a player to make.
-    def StaticEstimation(self, brd, originalBoard) :
+    def StaticEstimation(self, brd, originalBoard):
         bonus = 0
+        if brd.count('B') == 3:
+            return (100000* (3 - brd.count('B'))) + 1000*self.potentialBlack(brd) + 10*self.newBlackMillFormed(brd, originalBoard)
         if brd.count('B') < 3:
-            bonus = 10000
+            bonus = 10000000000
         elif brd.count('W') < 3:  
-            bonus = -10000
+            bonus = -10000000000
         self.positionsEvaluated += 1  
         wbMillDifference = self.millCountDiff(brd)
         wbPotentialMillsDifference = self.potentialMillsDiff(brd)
@@ -35,6 +37,19 @@ class TournamentGame(object) :
                 continue
         return formed
     
+    def newBlackMillFormed(self, brd, originalBoard):
+        bFormed = 0
+        mills = [[0,1,2], [0,3,6], [2,5,7], [2,12,21], [3,4,5], [5,11,18], [6,9,13], [7,10,15], [10,11,12], [13,14,15], [13,16,19], [14,17,20], [15,18,21], [16,17,18], [19,20,21]]
+        for mill in mills:
+            try:
+                if not(originalBoard[mill[0]] == originalBoard[mill[1]] == originalBoard[mill[2]]):
+                    if brd[mill[0]] == brd[mill[1]] == brd[mill[2]]:
+                        if brd[mill[0]] == 'B':
+                            bFormed -= 3
+            except:
+                continue
+        return bFormed
+    
     def millCountDiff(self, brd):
         wMills, bMills = 0, 0
         mills = [[0,1,2], [0,3,6], [2,5,7], [2,12,21], [3,4,5], [5,11,18], [6,9,13], [7,10,15], [10,11,12], [13,14,15], [13,16,19], [14,17,20], [15,18,21], [16,17,18], [19,20,21]]
@@ -48,6 +63,16 @@ class TournamentGame(object) :
             except:
                 continue        
         return wMills - bMills
+    
+    def potentialBlack(self, brd):
+        bpMills = 0
+        for i in range(len(brd)):
+            if brd[i] == 'x':
+                board = brd.copy()
+                board[i] = 'B'
+                if self.cf.CloseMill(i, board):
+                    bpMills -=3 
+        return bpMills
         
     
     def potentialMillsDiff(self, brd):

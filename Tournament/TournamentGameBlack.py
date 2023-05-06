@@ -10,10 +10,12 @@ class TournamentGame(object) :
     # This score is used by the minimax algorithm to determine the best possible move for a player to make.
     def StaticEstimation(self, brd) :  
         bonus = 0
+        if brd.count('B') == 3:
+            return (100000* (3 - brd.count('B'))) + 1000*self.potentialBlack(brd) + 10*self.newBlackMillFormed(brd, originalBoard)
         if brd.count('B') < 3:
-            bonus = 10000
+            bonus = 10000000000
         elif brd.count('W') < 3:  
-            bonus = -10000
+            bonus = -10000000000
         self.positionsEvaluated += 1  
         wbMillDifference = self.millCountDiff(brd)
         wbPotentialMillsDifference = self.potentialMillsDiff(brd)
