@@ -151,7 +151,7 @@ if __name__=="__main__":
         to.cf.printBoard(brd1)
         
         if brd1List.count('B')<5 and not(to.potentialblackMill(brd1List)) and not(to.potentialwhiteMill(brd1List)):
-            for j in [5, 3, 18, 16]:
+            for j in [18, 16, 3, 5]:
                 if brd1List[j] == 'x':
                    brd1List[j] = 'W' 
                    movePlayed = ''.join(brd1List)

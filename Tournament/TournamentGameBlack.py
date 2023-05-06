@@ -116,7 +116,7 @@ if __name__=="__main__":
         
         tg = TournamentGame()
         startTime = time.time()
-        timeLimit = 10
+        timeLimit = 15
         
         print("\nInput Board:\n")
         tg.cf.printBoard(brd1)
