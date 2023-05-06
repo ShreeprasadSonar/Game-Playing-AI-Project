@@ -119,7 +119,12 @@ if __name__=="__main__":
         print("\nInput Board:\n")
         tg.cf.printBoard(brd1)
         
-        for depth in range(1, 100):  
+        if brd1List.count('B') < 4:
+            dLimit = 5 - brd1List.count('B')
+        else:
+            dLimit = brd1List.count('B')
+        
+        for depth in range(1, dLimit):  
             alpha, beta = float('-inf'), float('inf')     
             movePlayedList = tg.MaxMin(tg.cf.Swap(brd1List), depth, alpha, beta, startTime, timeLimit) # Invoke MaxMin
             if movePlayedList is None:

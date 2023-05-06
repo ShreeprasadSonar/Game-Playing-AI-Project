@@ -146,8 +146,9 @@ if __name__=="__main__":
                    movePlayed = ''.join(brd1List)
                    played = True
                    break
+               
         if not played:      
-            for depth in range(1, 100):  
+            for depth in range(1, 3):  
                 alpha, beta = float('-inf'), float('inf')
                 movePlayedList = to.MaxMin(to.cf.Swap(brd1List), depth, alpha, beta, startTime, timeLimit) # Invoke MaxMin
                 if movePlayedList is None:

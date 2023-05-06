@@ -157,6 +157,8 @@ if __name__=="__main__":
                    movePlayed = ''.join(brd1List)
                    played = True
                    break
+               
+        
                    
         if not played:
             for depth in range(1, 3):  
